@@ -1,12 +1,10 @@
 package class
 
-type ClassService interface {
-	GetWelcomeMessage() string
-	GetAllClasses() string
-	GetClassById(id string) (string, error)
+type ClassReadService interface {
+}
+
+type ClassWriteService interface {
 }
 
 type ClassRepository interface {
-	GetAllClasses() string
-	GetClassById(id string) (string, error)
 }

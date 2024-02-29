@@ -1,30 +1,32 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
-	"virtual-diary/internal/class"
-	"virtual-diary/internal/db"
-	"virtual-diary/internal/student"
-
-	"github.com/gorilla/mux"
 )
 
-func main() {
-	fmt.Println("Hello World")
-	dbConn, err := db.DBConnector()
-	if err != nil {
-		log.Fatalf("Error connecting to the database: %v", err)
-	}
-	router := mux.NewRouter()
-	classRepository := class.NewClassRepository(dbConn)
-	classService := class.NewClassService(dbConn, classRepository)
-	class.RegisterRoutes(router, classService)
-	studentRepo := student.NewStudentRepo(dbConn)
-	studentService := student.NewStudentService(dbConn, studentRepo)
-	student.RegisterRoutes(router, studentService)
+func prepareClassDomain(classDomainInitialized chan bool) {
+	//gonna init class domain here
+	classDomainInitialized <- true
+	close(classDomainInitialized)
+}
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+func prepareStudentDomain(studentDomainInitialized chan bool) {
+	//gonna init student domain here
+	studentDomainInitialized <- true
+	close(studentDomainInitialized)
+}
+
+func main() {
+
+	studentChannel := make(chan bool)
+	classChannel := make(chan bool)
+
+	go prepareClassDomain(classChannel)
+	go prepareStudentDomain(studentChannel)
+	_, studentChannelClosed := <-classChannel
+	_, classChannelClosed := <-studentChannel
+	if !studentChannelClosed || !classChannelClosed {
+		log.Fatalf("Initialization failed")
+	}
 
 }
