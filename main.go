@@ -1,32 +1,40 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"sync"
+	"virtual-diary/internal/class"
+	"virtual-diary/internal/db"
+
+	"gorm.io/gorm"
 )
 
-func prepareClassDomain(classDomainInitialized chan bool) {
-	//gonna init class domain here
-	classDomainInitialized <- true
-	close(classDomainInitialized)
+func prepareClassDomain(dbConn *gorm.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
+	classRepository := class.NewClassRepository(dbConn)
+	classReadService := class.NewReadClassService(classRepository)
+	fmt.Println(classReadService)
+	// Prepare write service and routter for class
+	fmt.Println("Initializing Domain")
 }
 
-func prepareStudentDomain(studentDomainInitialized chan bool) {
-	//gonna init student domain here
-	studentDomainInitialized <- true
-	close(studentDomainInitialized)
+func prepareStudentDomain(dbConn *gorm.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
+	// Initialized domain of student
 }
+
+/// Initialize more domains like gradebook, teachers etc...
 
 func main() {
-
-	studentChannel := make(chan bool)
-	classChannel := make(chan bool)
-
-	go prepareClassDomain(classChannel)
-	go prepareStudentDomain(studentChannel)
-	_, studentChannelClosed := <-classChannel
-	_, classChannelClosed := <-studentChannel
-	if !studentChannelClosed || !classChannelClosed {
-		log.Fatalf("Initialization failed")
+	dbConn, err := db.DBConnector()
+	if err != nil {
+		fmt.Errorf("ERROR")
 	}
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
+	go prepareClassDomain(dbConn, wg)
+	go prepareStudentDomain(dbConn, wg)
+	wg.Wait()
+	///Listen to server after
 
 }
