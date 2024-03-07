@@ -26,7 +26,3 @@ func (s *classReadServiceImpl) GetClassById(id string) (classdao.Class, error) {
 
 	return class, nil
 }
-
-func (s *classReadServiceImpl) GetWelcomeMessage() string {
-	return "Welcome to the Class page!"
-}

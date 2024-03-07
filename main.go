@@ -2,23 +2,25 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"sync"
 	"virtual-diary/internal/class"
 	"virtual-diary/internal/db"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
-func prepareClassDomain(dbConn *gorm.DB, wg *sync.WaitGroup) {
+func prepareClassDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 	classRepository := class.NewClassRepository(dbConn)
 	classReadService := class.NewReadClassService(classRepository)
-	fmt.Println(classReadService)
-	// Prepare write service and routter for class
-	fmt.Println("Initializing Domain")
+	class.RegisterRoutes(router, classReadService)
+
 }
 
-func prepareStudentDomain(dbConn *gorm.DB, wg *sync.WaitGroup) {
+func prepareStudentDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 	// Initialized domain of student
 }
@@ -30,11 +32,14 @@ func main() {
 	if err != nil {
 		fmt.Errorf("ERROR")
 	}
+	router := mux.NewRouter()
+
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
-	go prepareClassDomain(dbConn, wg)
-	go prepareStudentDomain(dbConn, wg)
+	go prepareClassDomain(router, dbConn, wg)
+	go prepareStudentDomain(router, dbConn, wg)
 	wg.Wait()
 	///Listen to server after
+	log.Fatal(http.ListenAndServe(":8080", router))
 
 }

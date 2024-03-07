@@ -3,7 +3,6 @@ package class
 import "virtual-diary/internal/class/classdao"
 
 type ClassReadService interface {
-	GetWelcomeMessage() string
 	GetAllClasses() ([]classdao.Class, error)
 	GetClassById(id string) (classdao.Class, error)
 }
