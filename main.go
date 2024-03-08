@@ -16,7 +16,8 @@ func prepareClassDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup)
 	defer wg.Done()
 	classRepository := class.NewClassRepository(dbConn)
 	classReadService := class.NewReadClassService(classRepository)
-	class.RegisterRoutes(router, classReadService)
+	classWriteService := class.NewWriteClassService(classRepository)
+	class.RegisterRoutes(router, classReadService, classWriteService)
 
 }
 
@@ -34,10 +35,16 @@ func main() {
 	}
 	router := mux.NewRouter()
 
+	domains := []func(*mux.Router, *gorm.DB, *sync.WaitGroup){
+		prepareClassDomain,
+		prepareStudentDomain,
+	}
+
 	wg := &sync.WaitGroup{}
-	wg.Add(2)
-	go prepareClassDomain(router, dbConn, wg)
-	go prepareStudentDomain(router, dbConn, wg)
+	wg.Add(len(domains))
+	for _, domain := range domains {
+		go domain(router, dbConn, wg)
+	}
 	wg.Wait()
 	///Listen to server after
 	log.Fatal(http.ListenAndServe(":8080", router))

@@ -1,6 +1,7 @@
 package class
 
 import (
+	"fmt"
 	"virtual-diary/internal/class/classdao"
 
 	"gorm.io/gorm"
@@ -58,7 +59,7 @@ func (r *classRepoImpl) RemoveClass(classId string) (bool, error) {
 
 }
 
-func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string) string {
-
-	return "will be after student dao"
+func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string) (bool, error) {
+	fmt.Println("After Creation of student domain there will be something here")
+	return true, nil
 }

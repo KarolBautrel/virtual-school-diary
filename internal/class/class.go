@@ -8,6 +8,9 @@ type ClassReadService interface {
 }
 
 type ClassWriteService interface {
+	CreateClass(string, string) (bool, error)
+	RemoveClass(string) (bool, error)
+	RemoveStudentFromClass(string, string) (bool, error)
 }
 
 type ClassRepository interface {
