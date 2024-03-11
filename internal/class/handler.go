@@ -23,15 +23,15 @@ func RegisterRoutes(router *mux.Router, readService ClassReadService, writeServi
 		case "DELETE":
 			RemoveClassHandler(w, r, writeService)
 		}
-	}).Methods("GET", "POST", "DELETE")
+	})
 
 	router.HandleFunc("/class/{id}", func(w http.ResponseWriter, r *http.Request) {
 		ClassByIdHandler(w, r, readService)
-	}).Methods("GET")
+	})
 
 	router.HandleFunc("/class/{classId}/remove-student/{studentId}", func(w http.ResponseWriter, r *http.Request) {
 		DeleteStudentFromClassHandler(w, r, writeService)
-	}).Methods("PATCH")
+	})
 }
 
 func AllClasses(w http.ResponseWriter, r *http.Request, readService ClassReadService) {
