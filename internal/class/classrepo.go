@@ -1,6 +1,7 @@
 package class
 
 import (
+	"context"
 	"fmt"
 	"virtual-diary/internal/class/classdao"
 
@@ -15,18 +16,18 @@ func NewClassRepository(db *gorm.DB) ClassRepository {
 	return &classRepoImpl{db: db}
 }
 
-func (r *classRepoImpl) GetAllClasses() ([]classdao.Class, error) {
+func (r *classRepoImpl) GetAllClasses(timeoutContext context.Context) ([]classdao.Class, error) {
 	var classes []classdao.Class
-	err := r.db.Find(&classes).Error
+	err := r.db.WithContext(timeoutContext).Find(&classes).Error
 	if err != nil {
 		return nil, err
 	}
 	return classes, nil
 }
 
-func (r *classRepoImpl) GetClassById(id string) (classdao.Class, error) {
+func (r *classRepoImpl) GetClassById(id string, timeoutContext context.Context) (classdao.Class, error) {
 	class := classdao.Class{}
-	result := r.db.Where("id = ?", id).First(&class)
+	result := r.db.WithContext(timeoutContext).Where("id = ?", id).First(&class)
 	if result.Error != nil {
 		return classdao.Class{}, result.Error
 	}
@@ -45,13 +46,13 @@ func (r *classRepoImpl) CreateClass(name string, profile string) (bool, error) {
 	return true, nil
 }
 
-func (r *classRepoImpl) RemoveClass(classId string) (bool, error) {
-	class, err := r.GetClassById(classId)
+func (r *classRepoImpl) RemoveClass(classId string, timeoutContext context.Context) (bool, error) {
+	class, err := r.GetClassById(classId, timeoutContext)
 	if err != nil {
 		return false, err
 	}
 
-	if result := r.db.Delete(&class); result.Error != nil {
+	if result := r.db.WithContext(timeoutContext).Delete(&class); result.Error != nil {
 		return false, result.Error
 	}
 

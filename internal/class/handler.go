@@ -13,7 +13,7 @@ type ClassInput struct {
 	Profile string `json:"profile"`
 }
 
-func RegisterRoutes(router *mux.Router, readService ClassReadService, writeService ClassWriteService) {
+func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeService *ClassWriteService) {
 	router.HandleFunc("/class", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -34,7 +34,7 @@ func RegisterRoutes(router *mux.Router, readService ClassReadService, writeServi
 	})
 }
 
-func AllClasses(w http.ResponseWriter, r *http.Request, readService ClassReadService) {
+func AllClasses(w http.ResponseWriter, r *http.Request, readService *ClassReadService) {
 	classes, err := readService.GetAllClasses()
 	if err != nil {
 		http.Error(w, "Something went wrong", http.StatusBadRequest)
@@ -45,7 +45,7 @@ func AllClasses(w http.ResponseWriter, r *http.Request, readService ClassReadSer
 
 	fmt.Fprintln(w, classes)
 }
-func ClassByIdHandler(w http.ResponseWriter, r *http.Request, readService ClassReadService) {
+func ClassByIdHandler(w http.ResponseWriter, r *http.Request, readService *ClassReadService) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	class, err := readService.GetClassById(id)
@@ -59,7 +59,7 @@ func ClassByIdHandler(w http.ResponseWriter, r *http.Request, readService ClassR
 	fmt.Fprintln(w, class)
 }
 
-func CreateClassHandler(w http.ResponseWriter, r *http.Request, writeService ClassWriteService) {
+func CreateClassHandler(w http.ResponseWriter, r *http.Request, writeService *ClassWriteService) {
 	var input ClassInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -73,7 +73,7 @@ func CreateClassHandler(w http.ResponseWriter, r *http.Request, writeService Cla
 	fmt.Fprintln(w, status)
 }
 
-func RemoveClassHandler(w http.ResponseWriter, r *http.Request, writeService ClassWriteService) {
+func RemoveClassHandler(w http.ResponseWriter, r *http.Request, writeService *ClassWriteService) {
 	vars := mux.Vars(r)
 	classId, studentId := vars["classId"], vars["studentId"]
 	status, error := writeService.RemoveStudentFromClass(classId, studentId)
@@ -83,7 +83,7 @@ func RemoveClassHandler(w http.ResponseWriter, r *http.Request, writeService Cla
 	fmt.Fprintln(w, status)
 }
 
-func DeleteStudentFromClassHandler(w http.ResponseWriter, r *http.Request, writeService ClassWriteService) {
+func DeleteStudentFromClassHandler(w http.ResponseWriter, r *http.Request, writeService *ClassWriteService) {
 	vars := mux.Vars(r)
 	studentId := vars["studentId"]
 	status, error := writeService.RemoveClass(studentId)
