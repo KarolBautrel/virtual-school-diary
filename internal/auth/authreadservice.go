@@ -6,12 +6,12 @@ import (
 	"virtual-diary/internal/auth/userdto"
 )
 
-type ReadService struct {
+type AuthReadService struct {
 	repo AuthRepository
 }
 
-func NewReadService(repo AuthRepository) *ReadService {
-	return &ReadService{repo: repo}
+func NewReadService(repo AuthRepository) *AuthReadService {
+	return &AuthReadService{repo: repo}
 }
 
 func convertDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
@@ -19,7 +19,7 @@ func convertDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
 	userDTO.Username = userDAO.Username
 }
 
-func (s *ReadService) GetUserByUsername(username string) (userdto.UserDTO, error) {
+func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, error) {
 	var userDTO userdto.UserDTO
 	userDAO, err := s.repo.GetUserByUsername(username)
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *ReadService) GetUserByUsername(username string) (userdto.UserDTO, error
 	return userDTO, nil
 }
 
-func (s *ReadService) SignIn(username string, password string) (string, error) {
+func (s *AuthReadService) SignIn(username string, password string) (string, error) {
 	userDAO, err := s.repo.GetUserByUsername(username)
 	if err != nil {
 		fmt.Errorf("Error will be here")

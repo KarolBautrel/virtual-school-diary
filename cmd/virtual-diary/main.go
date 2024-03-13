@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"virtual-diary/internal/auth"
 	"virtual-diary/internal/class"
 	"virtual-diary/internal/db"
 
@@ -19,6 +20,13 @@ func prepareClassDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup)
 	classWriteService := class.NewWriteClassService(classRepository)
 	class.RegisterRoutes(router, classReadService, classWriteService)
 
+}
+
+func prepareAuthDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
+	authRepository := auth.NewAuthRepository(dbConn)
+	authReadService := auth.NewReadService(authRepository)
+	auth.RegisterRoutes(router, authReadService)
 }
 
 func prepareStudentDomain(router *mux.Router, dbConn *gorm.DB, wg *sync.WaitGroup) {
@@ -38,6 +46,7 @@ func main() {
 	domains := []func(*mux.Router, *gorm.DB, *sync.WaitGroup){
 		prepareClassDomain,
 		prepareStudentDomain,
+		prepareAuthDomain,
 	}
 
 	wg := &sync.WaitGroup{}

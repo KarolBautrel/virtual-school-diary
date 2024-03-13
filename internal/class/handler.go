@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"virtual-diary/middlewares"
 
 	"github.com/gorilla/mux"
 )
@@ -14,7 +15,7 @@ type ClassInput struct {
 }
 
 func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeService *ClassWriteService) {
-	router.HandleFunc("/class", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/class", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			AllClasses(w, r, readService)
@@ -23,15 +24,15 @@ func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeServ
 		case "DELETE":
 			RemoveClassHandler(w, r, writeService)
 		}
-	})
+	}))
 
-	router.HandleFunc("/class/{id}", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/class/{id}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		ClassByIdHandler(w, r, readService)
-	})
+	})).Methods("GET")
 
-	router.HandleFunc("/class/{classId}/remove-student/{studentId}", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/class/{classId}/remove-student/{studentId}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		DeleteStudentFromClassHandler(w, r, writeService)
-	})
+	})).Methods("DELETE")
 }
 
 func AllClasses(w http.ResponseWriter, r *http.Request, readService *ClassReadService) {
