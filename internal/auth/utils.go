@@ -2,6 +2,8 @@ package auth
 
 import (
 	"time"
+	"virtual-diary/internal/auth/userdao"
+	"virtual-diary/internal/auth/userdto"
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
@@ -28,4 +30,9 @@ func CreateToken(userId uint) (string, error) {
 		return "", err
 	}
 	return token, nil
+}
+
+func ConvertDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
+	userDTO.Email = userDAO.Email
+	userDTO.Username = userDAO.Username
 }

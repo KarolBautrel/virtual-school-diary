@@ -2,8 +2,9 @@ package auth
 
 import (
 	"fmt"
-	"virtual-diary/internal/auth/userdao"
+	"time"
 	"virtual-diary/internal/auth/userdto"
+	globalutils "virtual-diary/pkg/utils"
 )
 
 type AuthReadService struct {
@@ -14,26 +15,25 @@ func NewReadService(repo AuthRepository) *AuthReadService {
 	return &AuthReadService{repo: repo}
 }
 
-func convertDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
-	userDTO.Email = userDAO.Email
-	userDTO.Username = userDAO.Username
-}
-
 func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, error) {
 	var userDTO userdto.UserDTO
-	userDAO, err := s.repo.GetUserByUsername(username)
+	timeoutCtx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
+	defer cancel()
+	userDAO, err := s.repo.GetUserByUsername(username, timeoutCtx)
 	if err != nil {
 		fmt.Errorf("Error will be here")
 		return userdto.UserDTO{}, err
 
 	}
-	convertDaoToDto(&userDTO, userDAO)
+	ConvertDaoToDto(&userDTO, userDAO)
 
 	return userDTO, nil
 }
 
 func (s *AuthReadService) SignIn(username string, password string) (string, error) {
-	userDAO, err := s.repo.GetUserByUsername(username)
+	timeoutCtx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
+	defer cancel()
+	userDAO, err := s.repo.GetUserByUsername(username, timeoutCtx)
 	if err != nil {
 		fmt.Errorf("Error will be here")
 		return "", err

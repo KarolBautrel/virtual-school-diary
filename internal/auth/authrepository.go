@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"virtual-diary/internal/auth/userdao"
 
 	"gorm.io/gorm"
@@ -14,7 +15,7 @@ func NewAuthRepository(db *gorm.DB) AuthRepository {
 	return &authRepoImpl{db: db}
 }
 
-func (a *authRepoImpl) CreateUser(username string, email string, password string, rePassword string) (bool, error) {
+func (a *authRepoImpl) CreateUser(username string, email string, password string) (bool, error) {
 	newUser := userdao.User{
 		Username: username,
 		Email:    email,
@@ -27,9 +28,9 @@ func (a *authRepoImpl) CreateUser(username string, email string, password string
 	return true, nil
 }
 
-func (a *authRepoImpl) GetUserByUsername(username string) (userdao.User, error) {
+func (a *authRepoImpl) GetUserByUsername(username string, timeoutCtx context.Context) (userdao.User, error) {
 	var user userdao.User
-	result := a.db.Where("username = ?", username).First(&user)
+	result := a.db.WithContext(timeoutCtx).Where("username = ?", username).First(&user)
 	if result.Error != nil {
 		return userdao.User{}, result.Error
 	}
