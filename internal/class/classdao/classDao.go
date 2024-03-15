@@ -8,7 +8,7 @@ import (
 
 type Class struct {
 	gorm.Model
-	Name     string
-	Profile  string
-	Students []studentdao.Student
+	Name     string               `gorm:"type:varchar(100);not null"`
+	Profile  string               `gorm:"type:varchar(100);not null"`
+	Students []studentdao.Student `gorm:"foreignKey:ClassID"`
 }

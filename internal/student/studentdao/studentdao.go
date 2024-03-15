@@ -6,8 +6,8 @@ import (
 
 type Student struct {
 	gorm.Model
-	Name    string
-	Age     int
-	Surname string
-	ClassID uint
+	Name    string `gorm:"type:varchar(100);not null"`
+	Age     int    `gorm:"type:int;not null"`
+	Surname string `gorm:"type:varchar(100);not null"`
+	ClassID uint   `gorm:"type:int;not null"`
 }
