@@ -26,3 +26,11 @@ func (s *studentWriteServiceImpl) CreateStudent(name, surname, age, classId stri
 
 	return s.repository.CreateStudent(name, surname, intAge, uint(intId))
 }
+
+func (s *studentWriteServiceImpl) DeleteStudent(studentId string) (bool, error) {
+	_, err := s.repository.DeleteStudent(studentId)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
