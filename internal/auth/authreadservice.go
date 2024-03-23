@@ -17,9 +17,9 @@ func NewReadService(repo AuthRepository) *AuthReadService {
 
 func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, error) {
 	var userDTO userdto.UserDTO
-	timeoutCtx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
+	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
 	defer cancel()
-	userDAO, err := s.repo.GetUserByUsername(username, timeoutCtx)
+	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
 		fmt.Errorf("Error will be here")
 		return userdto.UserDTO{}, err
@@ -31,9 +31,9 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 }
 
 func (s *AuthReadService) SignIn(username string, password string) (string, error) {
-	timeoutCtx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
+	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
 	defer cancel()
-	userDAO, err := s.repo.GetUserByUsername(username, timeoutCtx)
+	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
 		fmt.Errorf("Error will be here")
 		return "", err

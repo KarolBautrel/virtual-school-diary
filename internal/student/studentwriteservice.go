@@ -5,15 +5,15 @@ import (
 	"strconv"
 )
 
-type studentWriteServiceImpl struct {
+type StudentWriteService struct {
 	repository StudentRepo
 }
 
-func NewWriteStudentService(repo StudentRepo) StudentWriteService {
-	return &studentWriteServiceImpl{repository: repo}
+func NewWriteStudentService(repo StudentRepo) *StudentWriteService {
+	return &StudentWriteService{repository: repo}
 }
 
-func (s *studentWriteServiceImpl) CreateStudent(name, surname, age, classId string) (bool, error) {
+func (s *StudentWriteService) CreateStudent(name, surname, age, classId string) (bool, error) {
 	intAge, err := strconv.Atoi(age)
 	if err != nil {
 		return false, fmt.Errorf("conversion to int failed: %w", err)
@@ -27,7 +27,7 @@ func (s *studentWriteServiceImpl) CreateStudent(name, surname, age, classId stri
 	return s.repository.CreateStudent(name, surname, intAge, uint(intId))
 }
 
-func (s *studentWriteServiceImpl) DeleteStudent(studentId string) (bool, error) {
+func (s *StudentWriteService) DeleteStudent(studentId string) (bool, error) {
 	_, err := s.repository.DeleteStudent(studentId)
 	if err != nil {
 		return false, err

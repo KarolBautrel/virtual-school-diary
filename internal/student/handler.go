@@ -16,7 +16,7 @@ type StudentInput struct {
 	ClassId string `json:"classid"`
 }
 
-func RegisterRoutes(router *mux.Router, readService StudentReadService, writeService StudentWriteService) {
+func RegisterRoutes(router *mux.Router, readService *StudentReadService, writeService *StudentWriteService) {
 	router.HandleFunc("/student", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -38,12 +38,12 @@ func RegisterRoutes(router *mux.Router, readService StudentReadService, writeSer
 	}))
 }
 
-func StudentHandler(w http.ResponseWriter, r *http.Request, readService StudentReadService) {
+func StudentHandler(w http.ResponseWriter, r *http.Request, readService *StudentReadService) {
 	message := readService.GetWelcomeMessage()
 	fmt.Fprintln(w, message)
 }
 
-func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService StudentReadService) {
+func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService *StudentReadService) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	mes, err := readService.GetStudentById(id)
@@ -53,7 +53,7 @@ func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService Stud
 	fmt.Fprintln(w, mes)
 }
 
-func StudentsByClassHandler(w http.ResponseWriter, r *http.Request, readService StudentReadService) {
+func StudentsByClassHandler(w http.ResponseWriter, r *http.Request, readService *StudentReadService) {
 	vars := mux.Vars(r)
 	class_id := vars["class_id"]
 	mes, err := readService.GetStudentsByClass(class_id)
@@ -63,7 +63,7 @@ func StudentsByClassHandler(w http.ResponseWriter, r *http.Request, readService 
 	fmt.Fprintln(w, mes)
 }
 
-func StudentDeleteHandler(w http.ResponseWriter, r *http.Request, writeService StudentWriteService) {
+func StudentDeleteHandler(w http.ResponseWriter, r *http.Request, writeService *StudentWriteService) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	mes, err := writeService.DeleteStudent(id)
@@ -73,7 +73,7 @@ func StudentDeleteHandler(w http.ResponseWriter, r *http.Request, writeService S
 	fmt.Fprintln(w, mes)
 }
 
-func StudentCreateHandler(w http.ResponseWriter, r *http.Request, writeService StudentWriteService) {
+func StudentCreateHandler(w http.ResponseWriter, r *http.Request, writeService *StudentWriteService) {
 	studnetSchema := StudentInput{}
 	if err := json.NewDecoder(r.Body).Decode(&studnetSchema); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
