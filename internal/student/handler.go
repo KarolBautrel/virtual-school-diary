@@ -27,7 +27,7 @@ func RegisterRoutes(router *mux.Router, readService *StudentReadService, writeSe
 			StudentDeleteHandler(w, r, writeService)
 
 		}
-	})).Methods("GET")
+	}))
 
 	router.HandleFunc("/student/{id}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		StudentByIdHandler(w, r, readService)
@@ -49,6 +49,8 @@ func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService *Stu
 	mes, err := readService.GetStudentById(id)
 	if err != nil {
 		http.Error(w, "Student Not Found", http.StatusNotFound)
+		return
+
 	}
 	fmt.Fprintln(w, mes)
 }
@@ -59,6 +61,7 @@ func StudentsByClassHandler(w http.ResponseWriter, r *http.Request, readService 
 	mes, err := readService.GetStudentsByClass(class_id)
 	if err != nil {
 		http.Error(w, "Student Not Found", http.StatusNotFound)
+		return
 	}
 	fmt.Fprintln(w, mes)
 }
@@ -69,6 +72,8 @@ func StudentDeleteHandler(w http.ResponseWriter, r *http.Request, writeService *
 	mes, err := writeService.DeleteStudent(id)
 	if err != nil {
 		http.Error(w, "Somethign went wrong", http.StatusBadGateway)
+		return
+
 	}
 	fmt.Fprintln(w, mes)
 }
