@@ -39,6 +39,7 @@ func AllClasses(w http.ResponseWriter, r *http.Request, readService *ClassReadSe
 	classes, err := readService.GetAllClasses()
 	if err != nil {
 		http.Error(w, "Something went wrong", http.StatusBadRequest)
+		return
 
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -52,7 +53,7 @@ func ClassByIdHandler(w http.ResponseWriter, r *http.Request, readService *Class
 	class, err := readService.GetClassById(id)
 	if err != nil {
 		http.Error(w, "Class not found", http.StatusNotFound)
-
+		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(class)
@@ -80,6 +81,7 @@ func RemoveClassHandler(w http.ResponseWriter, r *http.Request, writeService *Cl
 	status, error := writeService.RemoveStudentFromClass(classId, studentId)
 	if error != nil {
 		http.Error(w, "Something went wrong", http.StatusBadGateway)
+		return
 	}
 	fmt.Fprintln(w, status)
 }
@@ -90,6 +92,7 @@ func DeleteStudentFromClassHandler(w http.ResponseWriter, r *http.Request, write
 	status, error := writeService.RemoveClass(studentId)
 	if error != nil {
 		http.Error(w, "Something went wrong", http.StatusBadGateway)
+		return
 	}
 	fmt.Fprintln(w, status)
 }
