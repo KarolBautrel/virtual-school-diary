@@ -35,6 +35,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, readService *AuthReadService
 
 	if err != nil {
 		http.Error(w, "Something went wrong", http.StatusBadRequest)
+		return
 
 	}
 
@@ -48,6 +49,7 @@ func GetUserByUsername(w http.ResponseWriter, r *http.Request, readService *Auth
 	user, err := readService.GetUserByUsername(username)
 	if err != nil {
 		http.Error(w, "Something went wrong", http.StatusBadRequest)
+		return
 
 	}
 	fmt.Fprintln(w, user)
