@@ -21,7 +21,7 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 	defer cancel()
 	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
-		fmt.Errorf("Error will be here")
+		fmt.Errorf("error will be here: %s", err)
 		return userdto.UserDTO{}, err
 
 	}
@@ -35,16 +35,16 @@ func (s *AuthReadService) SignIn(username string, password string) (string, erro
 	defer cancel()
 	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
-		fmt.Errorf("Error will be here")
+		fmt.Errorf("error will be here: %s", err)
 		return "", err
 	}
 	if !VerifyPassword(userDAO.Password, password) {
-		fmt.Errorf("Error will be here")
+		fmt.Errorf("error will be here: %s", err)
 		return "", err
 	}
 	token, err := CreateToken(userDAO.ID)
 	if err != nil {
-		fmt.Errorf("Error will be here")
+		fmt.Errorf("error will be here: %s", err)
 		return "", err
 	}
 	return token, nil
