@@ -32,7 +32,7 @@ func CreateToken(userId uint) (string, error) {
 	return token, nil
 }
 
-func ConvertDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
+func ConvertUserDaoToDto(userDTO *userdto.UserDTO, userDAO userdao.User) {
 	userDTO.Email = userDAO.Email
 	userDTO.Username = userDAO.Username
 }

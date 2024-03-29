@@ -25,7 +25,7 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 		return userdto.UserDTO{}, err
 
 	}
-	ConvertDaoToDto(&userDTO, userDAO)
+	ConvertUserDaoToDto(&userDTO, userDAO)
 
 	return userDTO, nil
 }

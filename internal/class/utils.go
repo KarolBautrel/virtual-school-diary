@@ -5,7 +5,7 @@ import (
 	"virtual-diary/internal/class/classdto"
 )
 
-func ConvertDaoToDto(classDTO *classdto.ClassDto, classDAO *classdao.Class) {
+func ConvertClassDaoToDto(classDTO *classdto.ClassDto, classDAO *classdao.Class) {
 	classDTO.Name = classDAO.Name
 	classDTO.Profile = classDAO.Profile
 }
