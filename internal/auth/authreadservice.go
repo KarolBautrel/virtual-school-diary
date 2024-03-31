@@ -21,8 +21,8 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 	defer cancel()
 	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
-		fmt.Errorf("error will be here: %s", err)
-		return userdto.UserDTO{}, err
+
+		return userdto.UserDTO{}, fmt.Errorf("error will be here: %s", err)
 
 	}
 	ConvertUserDaoToDto(&userDTO, userDAO)
@@ -35,17 +35,17 @@ func (s *AuthReadService) SignIn(username string, password string) (string, erro
 	defer cancel()
 	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
-		fmt.Errorf("error will be here: %s", err)
-		return "", err
+		return "", fmt.Errorf("error with getting username from repo: %s", err)
+
 	}
 	if !VerifyPassword(userDAO.Password, password) {
-		fmt.Errorf("error will be here: %s", err)
-		return "", err
+
+		return "", fmt.Errorf("password does not match: %s", err)
 	}
 	token, err := CreateToken(userDAO.ID)
 	if err != nil {
-		fmt.Errorf("error will be here: %s", err)
-		return "", err
+
+		return "", fmt.Errorf("there is an error with token: %s", err)
 	}
 	return token, nil
 }
