@@ -1,7 +1,6 @@
 package student
 
 import (
-	"virtual-diary/internal/student/studentdao"
 	"virtual-diary/internal/student/studentdto"
 )
 
@@ -19,17 +18,23 @@ func (s *StudentReadService) GetStudentById(id string) (studentdto.StudentDTO, e
 		return studentdto.StudentDTO{}, err
 	}
 	var studentDTO studentdto.StudentDTO
-	ConvertDaoToDto(&student, &studentDTO)
+	ConvertStudentDaoToDto(&student, &studentDTO)
 	return studentDTO, err
 }
 
-func (s *StudentReadService) GetStudentsByClass(className string) ([]studentdao.Student, error) {
+func (s *StudentReadService) GetStudentsByClass(className string) ([]studentdto.StudentDTO, error) {
 	students, err := s.repository.GetStudentsByClass(className)
 	if err != nil {
-		return students, err
+		return []studentdto.StudentDTO{}, err
 	}
+	studentsDTO := []studentdto.StudentDTO{}
 
-	return students, err
+	for _, student := range students {
+		var studentDTO studentdto.StudentDTO
+		ConvertStudentDaoToDto(&student, &studentDTO)
+		studentsDTO = append(studentsDTO, studentDTO)
+	}
+	return studentsDTO, err
 }
 func (s *StudentReadService) GetWelcomeMessage() string {
 	return "Welcome to the Student page!"
