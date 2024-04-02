@@ -24,9 +24,9 @@ func (s *ClassReadService) GetAllClasses() ([]classdto.ClassDto, error) {
 	}
 	classesDTO := []classdto.ClassDto{}
 
-	for _, class := range classes {
+	for _, classDAO := range classes {
 		var classDTO classdto.ClassDto
-		ConvertClassDaoToDto(&classDTO, &class)
+		ConvertClassDaoToDto(&classDTO, &classDAO)
 		classesDTO = append(classesDTO, classDTO)
 	}
 	return classesDTO, nil
@@ -36,13 +36,13 @@ func (s *ClassReadService) GetClassById(id string) (classdto.ClassDto, error) {
 	ctx, cancel := gloablutils.NewTimeoutContext(time.Millisecond * 10000)
 	defer cancel()
 
-	class, err := s.repository.GetClassById(id, ctx)
+	classDAO, err := s.repository.GetClassById(id, ctx)
 	var classDTO classdto.ClassDto
 	if err != nil {
 		return classdto.ClassDto{}, fmt.Errorf("error in read service: %s", err)
 
 	}
-	ConvertClassDaoToDto(&classDTO, &class)
+	ConvertClassDaoToDto(&classDTO, &classDAO)
 
 	return classDTO, nil
 }
