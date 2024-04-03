@@ -10,19 +10,19 @@ func NewWriteService(repo AuthRepository) *AuthWriteService {
 	return &AuthWriteService{repo: repo}
 }
 
-func (s *AuthReadService) RegisterUser(username string, password string, rePassword string, email string) bool {
+func (s *AuthReadService) RegisterUser(username string, password string, rePassword string, email string) (bool, error) {
 	if password != rePassword {
-		fmt.Errorf("Error will be here")
-		return false
+
+		return false, fmt.Errorf("password doesnt match")
 	}
 	hahsedPassword, err := HashPassword(password)
 	if err != nil {
-		fmt.Errorf("Error will be here")
-		return false
+
+		return false, fmt.Errorf("something went wrong with hashing password : %s ", err)
 	}
 	result, err := s.repo.CreateUser(username, email, hahsedPassword)
 	if err != nil {
-		return false
+		return false, fmt.Errorf("something went wrong with user creation : %s ", err)
 	}
-	return result
+	return result, nil
 }
