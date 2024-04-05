@@ -22,7 +22,7 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 	userDAO, err := s.repo.GetUserByUsername(username, ctx)
 	if err != nil {
 
-		return userdto.UserDTO{}, fmt.Errorf("error will be here: %s", err)
+		return userdto.UserDTO{}, fmt.Errorf("error with getting user: %s", err)
 
 	}
 	ConvertUserDaoToDto(&userDTO, userDAO)

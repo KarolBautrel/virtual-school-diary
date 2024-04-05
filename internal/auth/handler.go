@@ -26,12 +26,12 @@ func RegisterRoutes(router *mux.Router, readService *AuthReadService) {
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request, readService *AuthReadService) {
-	var input SignInInput
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	var siginInInput SignInInput
+	if err := json.NewDecoder(r.Body).Decode(&siginInInput); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	token, err := readService.SignIn(input.Username, input.Password)
+	token, err := readService.SignIn(siginInInput.Username, siginInInput.Password)
 
 	if err != nil {
 		http.Error(w, "Something went wrong", http.StatusBadRequest)
