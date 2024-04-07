@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"virtual-diary/internal/auth/userdao"
 
 	"gorm.io/gorm"
@@ -32,7 +33,18 @@ func (a *authRepoImpl) GetUserByUsername(username string, timeoutCtx context.Con
 	var user userdao.User
 	result := a.db.WithContext(timeoutCtx).Where("username = ?", username).First(&user)
 	if result.Error != nil {
-		return userdao.User{}, result.Error
+		return userdao.User{}, fmt.Errorf("there was an error with getting user by username: %s", result.Error)
+
+	}
+	return user, nil
+}
+
+func (a *authRepoImpl) GetUserById(userId string, timeoutCtx context.Context) (userdao.User, error) {
+	var user userdao.User
+	result := a.db.WithContext(timeoutCtx).Where("id = ?", userId).First(&user)
+	if result.Error != nil {
+		return userdao.User{}, fmt.Errorf("there was an error with getting user by id: %s", result.Error)
+
 	}
 	return user, nil
 }
