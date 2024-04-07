@@ -29,7 +29,20 @@ func (s *AuthReadService) GetUserByUsername(username string) (userdto.UserDTO, e
 
 	return userDTO, nil
 }
+func (s *AuthReadService) GetUserById(userId string) (userdto.UserDTO, error) {
+	var userDTO userdto.UserDTO
+	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
+	defer cancel()
+	userDAO, err := s.repo.GetUserById(userId, ctx)
+	if err != nil {
 
+		return userdto.UserDTO{}, fmt.Errorf("error with getting user by id: %s", err)
+
+	}
+	ConvertUserDaoToDto(&userDTO, userDAO)
+
+	return userDTO, nil
+}
 func (s *AuthReadService) SignIn(username string, password string) (string, error) {
 	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 10000)
 	defer cancel()
