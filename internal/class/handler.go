@@ -24,7 +24,7 @@ func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeServ
 		case "DELETE":
 			RemoveClassHandler(w, r, writeService)
 		}
-	}))
+	})).Methods("GET", "POST", "DELETE")
 
 	router.HandleFunc("/class/{id}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		ClassByIdHandler(w, r, readService)
