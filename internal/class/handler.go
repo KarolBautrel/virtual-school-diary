@@ -38,7 +38,7 @@ func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeServ
 func AllClasses(w http.ResponseWriter, r *http.Request, readService *ClassReadService) {
 	classes, err := readService.GetAllClasses()
 	if err != nil {
-		http.Error(w, "Something went wrong", http.StatusBadRequest)
+		http.Error(w, "error with fetching classes", http.StatusBadRequest)
 		return
 
 	}
@@ -52,7 +52,7 @@ func ClassByIdHandler(w http.ResponseWriter, r *http.Request, readService *Class
 	id := vars["id"]
 	class, err := readService.GetClassById(id)
 	if err != nil {
-		http.Error(w, "Class not found", http.StatusNotFound)
+		http.Error(w, "error with fetching class", http.StatusNotFound)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
