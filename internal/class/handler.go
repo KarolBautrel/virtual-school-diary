@@ -69,7 +69,7 @@ func CreateClassHandler(w http.ResponseWriter, r *http.Request, writeService *Cl
 	}
 	status, err := writeService.CreateClass(input.Name, input.Profile)
 	if err != nil {
-		http.Error(w, "Something went wrong", http.StatusBadGateway)
+		http.Error(w, "error with create class", http.StatusBadGateway)
 		return
 	}
 	fmt.Fprintln(w, status)
