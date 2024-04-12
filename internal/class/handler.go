@@ -80,7 +80,7 @@ func RemoveClassHandler(w http.ResponseWriter, r *http.Request, writeService *Cl
 	classId, studentId := vars["classId"], vars["studentId"]
 	status, error := writeService.RemoveStudentFromClass(classId, studentId)
 	if error != nil {
-		http.Error(w, "Something went wrong", http.StatusBadGateway)
+		http.Error(w, "error with removing class", http.StatusBadGateway)
 		return
 	}
 	fmt.Fprintln(w, status)
