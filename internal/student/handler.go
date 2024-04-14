@@ -48,7 +48,7 @@ func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService *Stu
 	id := vars["id"]
 	mes, err := readService.GetStudentById(id)
 	if err != nil {
-		http.Error(w, "Student Not Found", http.StatusNotFound)
+		http.Error(w, "student Not Found", http.StatusNotFound)
 		return
 
 	}
@@ -60,7 +60,7 @@ func StudentsByClassHandler(w http.ResponseWriter, r *http.Request, readService 
 	class_id := vars["class_id"]
 	mes, err := readService.GetStudentsByClass(class_id)
 	if err != nil {
-		http.Error(w, "Student Not Found", http.StatusNotFound)
+		http.Error(w, "student Not Found", http.StatusNotFound)
 		return
 	}
 	fmt.Fprintln(w, mes)
@@ -71,7 +71,7 @@ func StudentDeleteHandler(w http.ResponseWriter, r *http.Request, writeService *
 	id := vars["id"]
 	mes, err := writeService.DeleteStudent(id)
 	if err != nil {
-		http.Error(w, "Somethign went wrong", http.StatusBadGateway)
+		http.Error(w, "There was an error with student deletion", http.StatusBadGateway)
 		return
 
 	}
