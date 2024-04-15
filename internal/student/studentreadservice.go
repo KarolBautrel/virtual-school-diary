@@ -1,7 +1,9 @@
 package student
 
 import (
+	"time"
 	"virtual-diary/internal/student/studentdto"
+	globalutils "virtual-diary/pkg/utils"
 )
 
 type StudentReadService struct {
@@ -13,7 +15,9 @@ func NewReadStudentService(repo StudentRepo) *StudentReadService {
 }
 
 func (s *StudentReadService) GetStudentById(id string) (studentdto.StudentDTO, error) {
-	student, err := s.repository.GetStudentById(id)
+	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 1000)
+	defer cancel()
+	student, err := s.repository.GetStudentById(id, ctx)
 	if err != nil {
 		return studentdto.StudentDTO{}, err
 	}
@@ -23,7 +27,9 @@ func (s *StudentReadService) GetStudentById(id string) (studentdto.StudentDTO, e
 }
 
 func (s *StudentReadService) GetStudentsByClass(className string) ([]studentdto.StudentDTO, error) {
-	students, err := s.repository.GetStudentsByClass(className)
+	ctx, cancel := globalutils.NewTimeoutContext(time.Millisecond * 1000)
+	defer cancel()
+	students, err := s.repository.GetStudentsByClass(className, ctx)
 	if err != nil {
 		return []studentdto.StudentDTO{}, err
 	}
@@ -35,7 +41,4 @@ func (s *StudentReadService) GetStudentsByClass(className string) ([]studentdto.
 		studentsDTO = append(studentsDTO, studentDTO)
 	}
 	return studentsDTO, err
-}
-func (s *StudentReadService) GetWelcomeMessage() string {
-	return "Welcome to the Student page!"
 }

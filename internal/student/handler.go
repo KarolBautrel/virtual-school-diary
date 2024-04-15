@@ -86,7 +86,7 @@ func StudentCreateHandler(w http.ResponseWriter, r *http.Request, writeService *
 	}
 	status, err := writeService.CreateStudent(studnetSchema.Name, studnetSchema.Surname, studnetSchema.Age, studnetSchema.ClassId)
 	if err != nil {
-		http.Error(w, "Something went wrong", http.StatusBadGateway)
+		http.Error(w, "There was an error with student creation", http.StatusBadGateway)
 		return
 	}
 	fmt.Fprintln(w, status)
