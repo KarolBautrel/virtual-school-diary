@@ -20,7 +20,7 @@ func RegisterRoutes(router *mux.Router, readService *StudentReadService, writeSe
 	router.HandleFunc("/student", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			StudentHandler(w, r, readService)
+			StudentByIdHandler(w, r, readService)
 		case "POST":
 			StudentCreateHandler(w, r, writeService)
 		case "DELETE":
@@ -36,11 +36,6 @@ func RegisterRoutes(router *mux.Router, readService *StudentReadService, writeSe
 	router.HandleFunc("/student/class/{class_id}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		StudentsByClassHandler(w, r, readService)
 	}))
-}
-
-func StudentHandler(w http.ResponseWriter, r *http.Request, readService *StudentReadService) {
-	message := readService.GetWelcomeMessage()
-	fmt.Fprintln(w, message)
 }
 
 func StudentByIdHandler(w http.ResponseWriter, r *http.Request, readService *StudentReadService) {
