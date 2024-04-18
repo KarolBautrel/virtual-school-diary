@@ -9,9 +9,8 @@ func JWTmiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		if err := VerifyToken(token); err != nil {
-			fmt.Errorf("ERROR")
+			fmt.Errorf("jwt verify error")
 		}
-		fmt.Println(token)
 		next.ServeHTTP(w, r)
 	}
 }
