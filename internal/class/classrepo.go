@@ -2,8 +2,8 @@ package class
 
 import (
 	"context"
-	"fmt"
 	"virtual-diary/internal/class/classdao"
+	"virtual-diary/internal/student/studentdao"
 
 	"gorm.io/gorm"
 )
@@ -60,11 +60,18 @@ func (r *classRepoImpl) RemoveClass(classId string, timeoutContext context.Conte
 
 }
 
-func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string, timeoutContext context.Context) (bool, error) {
-	fmt.Println("After Creation of student domain there will be something here")
+func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string) (bool, error) {
+	var student studentdao.Student
+	if err := r.db.Where("id = ? AND class_id = ?", studentId, classId).First(&student).Error; err != nil {
+		return false, err
+	}
+	student.ClassID = 0
+	if err := r.db.Save(&student).Error; err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
-
 func (r *classRepoImpl) AddStudentToClass(studentId string, classId string, timeoutContext context.Context) (bool, error) {
 	///Impl coming soon
 	return true, nil
