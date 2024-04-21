@@ -60,7 +60,12 @@ func (r *classRepoImpl) RemoveClass(classId string, timeoutContext context.Conte
 
 }
 
-func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string) (bool, error) {
+func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string, timeoutContext context.Context) (bool, error) {
 	fmt.Println("After Creation of student domain there will be something here")
+	return true, nil
+}
+
+func (r *classRepoImpl) AddStudentToClass(studentId string, classId string, timeoutContext context.Context) (bool, error) {
+	///Impl coming soon
 	return true, nil
 }
