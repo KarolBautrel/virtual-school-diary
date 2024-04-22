@@ -73,6 +73,19 @@ func (r *classRepoImpl) RemoveStudentFromClass(studentId string, classId string)
 	return true, nil
 }
 func (r *classRepoImpl) AddStudentToClass(studentId string, classId string, timeoutContext context.Context) (bool, error) {
-	///Impl coming soon
+	var student studentdao.Student
+	if err := r.db.Where("id = ?", studentId).First(&student).Error; err != nil {
+		return false, err
+	}
+
+	class, err := r.GetClassById(classId, timeoutContext)
+	if err != nil {
+		return false, err
+	}
+
+	class.Students = append(class.Students, student)
+	if err := r.db.Save(&class).Error; err != nil {
+		return false, err
+	}
 	return true, nil
 }

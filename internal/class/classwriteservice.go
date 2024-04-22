@@ -31,9 +31,7 @@ func (s *ClassWriteService) RemoveClass(classId string) (bool, error) {
 }
 
 func (s *ClassWriteService) RemoveStudentFromClass(studentId string, classId string) (bool, error) {
-	ctx, close := globalutils.NewTimeoutContext(time.Microsecond * 10000)
-	defer close()
-	status, err := s.repository.RemoveStudentFromClass(studentId, classId, ctx)
+	status, err := s.repository.RemoveStudentFromClass(studentId, classId)
 	if err != nil {
 		return false, err
 	}
