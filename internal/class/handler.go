@@ -33,6 +33,10 @@ func RegisterRoutes(router *mux.Router, readService *ClassReadService, writeServ
 	router.HandleFunc("/class/{classId}/remove-student/{studentId}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
 		DeleteStudentFromClassHandler(w, r, writeService)
 	})).Methods("DELETE")
+
+	router.HandleFunc("/class/{classId}/add-student/{studentId}", middlewares.JWTmiddleware(func(w http.ResponseWriter, r *http.Request) {
+		AddStudentToClassHandler(w, r, writeService)
+	})).Methods("DELETE")
 }
 
 func AllClasses(w http.ResponseWriter, r *http.Request, readService *ClassReadService) {
@@ -95,4 +99,7 @@ func DeleteStudentFromClassHandler(w http.ResponseWriter, r *http.Request, write
 		return
 	}
 	fmt.Fprintln(w, status)
+}
+func AddStudentToClassHandler(w http.ResponseWriter, r *http.Request, writeService *ClassWriteService) {
+	///
 }
