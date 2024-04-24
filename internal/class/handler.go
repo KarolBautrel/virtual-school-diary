@@ -101,5 +101,17 @@ func DeleteStudentFromClassHandler(w http.ResponseWriter, r *http.Request, write
 	fmt.Fprintln(w, status)
 }
 func AddStudentToClassHandler(w http.ResponseWriter, r *http.Request, writeService *ClassWriteService) {
-	///
+	vars := mux.Vars(r)
+	studentId := vars["studentId"]
+	classId := vars["classId"]
+	if classId == "" || studentId == "" {
+		http.Error(w, "error with removing student from class", http.StatusBadGateway)
+		return
+	}
+	status, error := writeService.AddStudentToClass(studentId, classId)
+	if error != nil {
+		http.Error(w, "error with removing student from class", http.StatusBadGateway)
+		return
+	}
+	fmt.Fprintln(w, status)
 }
