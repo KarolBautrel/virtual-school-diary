@@ -38,6 +38,13 @@ func (s *ClassWriteService) RemoveStudentFromClass(studentId string, classId str
 	return status, err
 }
 
-func (s *ClassWriteService) AddStudentToClass(studentId string, classId string) (bool, error){
-	return nil nil
-} 
+func (s *ClassWriteService) AddStudentToClass(studentId string, classId string) (bool, error) {
+	ctx, close := globalutils.NewTimeoutContext(time.Microsecond * 10000)
+	defer close()
+	status, err := s.repository.AddStudentToClass(studentId, classId, ctx)
+	if err != nil {
+		return false, err
+	}
+	return status, err
+
+}
