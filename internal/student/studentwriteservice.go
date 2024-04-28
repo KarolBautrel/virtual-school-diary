@@ -25,7 +25,7 @@ func (s *StudentWriteService) CreateStudent(name, surname, age, classId string) 
 
 	intId, err := strconv.Atoi(classId)
 	if err != nil {
-		return false, fmt.Errorf("conversion to int failed: %w", err)
+		return false, fmt.Errorf("conversion to int PDW: %w", err)
 	}
 
 	return s.repository.CreateStudent(name, surname, intAge, uint(intId), ctx)
